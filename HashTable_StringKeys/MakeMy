@@ -1,0 +1,46 @@
+# "Фиктивные" цели
+.PHONY: all clean
+
+# Используемый компилятор
+CC=gcc
+AR=ar
+
+# Установленные флаги для ассемблирования
+CFLAGS=-c -Wall
+
+# Установленные флаги для компиляции
+LDFLAGS=-O1
+
+# Имя библиотеки
+MYLIBNAME=HashTable.a
+
+# Исходники
+SOURCES= HashTable.c
+
+FORTEST = Test.c
+
+# Все объекты (с тем же именем)
+OBJECTS=$(SOURCES:.c=.o)
+
+# Название исполняемого файла
+EXECUTABLE=hashEx
+
+# Зависимости: sources, exec и сборка либы
+all: $(SOURCES) $(EXECUTABLE) $(MYLIBNAME)
+
+# Создание exec
+$(EXECUTABLE): $(OBJECTS) $(MYLIBNAME)
+	$(CC) $(LDFLAGS) $(FORTEST) $(MYLIBNAME) -o $@
+
+# Создание библиотеки
+$(MYLIBNAME): $(OBJECTS)
+	$(AR) -rsc $@ $(OBJECTS)
+
+# $@ — имя .o-файла
+# $< — имя .c-файла
+# Создание .o из .c
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	del *.o
